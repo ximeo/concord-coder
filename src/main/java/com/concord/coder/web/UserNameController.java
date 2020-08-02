@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
+@RequestMapping("/users/names")
 public class UserNameController {
   private static final Logger logger = LoggerFactory.getLogger(UserNameController.class.getName());
 
@@ -25,24 +26,30 @@ public class UserNameController {
     this.userService = userService;
   }
 
-  @PostMapping(value = "/users/names", params = "encrypted", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @ResponseStatus(HttpStatus.OK)
-  public UserNameResponseDTO getEncryptedFullUserName(@RequestBody UserNameRequestDTO user) {
-    Integer userId = user.getId();
-    logger.trace("Request for encrypted user name by id {} has been received.", userId);
-    String encryptedFullName = userService.getEncryptedFullName(userId);
-    logger.trace("Response with user name {} for user id {} has been sent", encryptedFullName, userId);
-    return new UserNameResponseDTO(encryptedFullName, null);
+  @GetMapping("")
+  public String getAll() {
+    return "Hello to all!";
   }
 
-  @PostMapping(value = "/users/names", params = "decrypted", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+
+  @PostMapping(params = "encrypted", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @ResponseStatus(HttpStatus.OK)
+  public UserNameResponseDTO getEncryptedFullUserName(@RequestBody UserNameRequestDTO userDTO) {
+    int userId = userDTO.getId();
+    logger.trace("Request for encrypted user name has been received: {}", userDTO);
+    UserNameResponseDTO toSend = new UserNameResponseDTO(userService.getEncryptedFullName(userId), null);
+    logger.trace("Response with encrypted user name for user id {} has been sent: {}", userId, toSend);
+    return toSend;
+  }
+
+  @PostMapping(params = "decrypted", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(HttpStatus.OK)
   public UserNameResponseDTO getDecryptedFullUserName(@RequestBody UserNameRequestDTO userDTO) {
     String encryptedFullUserName = userDTO.getEncryptedFullName();
-    logger.trace("Request for decrypted user name by encrypted name {} has been received.", encryptedFullUserName);
-    String decryptedFullUserName = userService.getFullName(encryptedFullUserName);
-    logger.trace("Response with decrypted user name {} for encrypted name {} has been sent", decryptedFullUserName, encryptedFullUserName);
-    return new UserNameResponseDTO(null, decryptedFullUserName);
+    logger.trace("Request for decrypted user name by encrypted name {} has been received: {}", encryptedFullUserName, userDTO);
+    UserNameResponseDTO toSend = new UserNameResponseDTO(null, userService.getFullName(encryptedFullUserName));
+    logger.trace("Response for decrypted user name by encrypted name {} will be sent: {}", encryptedFullUserName, toSend);
+    return toSend;
   }
 
   @ExceptionHandler(UserNameCantBeObtainedException.class)

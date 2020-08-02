@@ -25,6 +25,7 @@ public class UserNameServiceImpl implements UserNameService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public String getEncryptedFullName(int id) {
     return userRepository.findById(id)
             .map(User::getFullName)

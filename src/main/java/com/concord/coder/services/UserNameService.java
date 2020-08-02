@@ -1,6 +1,5 @@
 package com.concord.coder.services;
 
-import com.concord.coder.model.User;
 
 public interface UserNameService {
 
