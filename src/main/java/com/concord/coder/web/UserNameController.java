@@ -26,11 +26,6 @@ public class UserNameController {
     this.userService = userService;
   }
 
-  @GetMapping("")
-  public String getAll() {
-    return "Hello to all!";
-  }
-
 
   @PostMapping(params = "encrypted", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(HttpStatus.OK)

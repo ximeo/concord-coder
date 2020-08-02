@@ -2,7 +2,7 @@ package com.concord.coder.services;
 
 import com.concord.coder.dao.UserRepository;
 import com.concord.coder.model.User;
-import com.concord.coder.services.impl.UserNameServiceImpl;
+import com.concord.coder.services.impl.UserNameCryptoService;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -32,7 +32,7 @@ public class UserNameServiceTest {
     user.setId(EXISTENT_USER_ID);
     user.setFullName(USER_FULL_NAME);
     when(userRepository.findById(EXISTENT_USER_ID)).thenReturn(Optional.of(user));
-    testedInstance = new UserNameServiceImpl(userRepository, PASSWORD);
+    testedInstance = new UserNameCryptoService(userRepository, PASSWORD);
     ENCRYPTED_FULL_USER_NAME_CORRECT = encrypt(USER_FULL_NAME, PASSWORD);
 
   }

@@ -12,20 +12,19 @@ import javax.transaction.Transactional;
 import static com.concord.coder.util.CryptoHelper.*;
 
 @Service
-@Transactional
-public class UserNameServiceImpl implements UserNameService {
+public class UserNameCryptoService implements UserNameService {
 
   private final UserRepository userRepository;
   private final String password;
 
   @Autowired
-  public UserNameServiceImpl(UserRepository userRepository, @Value("${crypto.password}") String cryptoPassword) {
+  public UserNameCryptoService(UserRepository userRepository, @Value("${crypto.password}") String cryptoPassword) {
     this.userRepository = userRepository;
     this.password = cryptoPassword;
   }
 
   @Override
-  @Transactional(readOnly = true)
+  @Transactional
   public String getEncryptedFullName(int id) {
     return userRepository.findById(id)
             .map(User::getFullName)
